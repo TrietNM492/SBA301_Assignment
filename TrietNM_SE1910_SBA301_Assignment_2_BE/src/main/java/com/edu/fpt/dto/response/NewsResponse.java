@@ -11,7 +11,7 @@ public record NewsResponse(
         Instant createdDate,
         String newsContent,
         String newsSource,
-        Category categoryID,
+        Long categoryID,
         Boolean newsStatus,
         Long updatedByID,
         Instant modifiedDate

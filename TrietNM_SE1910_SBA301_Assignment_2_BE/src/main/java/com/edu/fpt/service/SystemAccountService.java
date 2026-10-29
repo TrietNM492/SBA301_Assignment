@@ -8,7 +8,6 @@ import com.edu.fpt.dto.request.ProfileRequest;
 import com.edu.fpt.dto.response.AccountReponse;
 import com.edu.fpt.dto.response.ProfileResponse;
 import com.edu.fpt.exception.EmailAlreadyExistException;
-import com.edu.fpt.exception.InvalidFieldInputException;
 import com.edu.fpt.exception.ResourceNotFoundException;
 import com.edu.fpt.repository.SystemAccountRepository;
 import com.edu.fpt.util.PageResponse;
@@ -58,7 +57,7 @@ public class SystemAccountService {
 
     public PageResponse<AccountReponse> viewAccounts(String key, Pageable pageable) {
         Page<SystemAccount> systemAccounts = systemAccountRepository
-                .findSystemAccountByAccountEmailIgnoreCaseOrderBy(key, pageable);
+                .findByAccountEmailContainingIgnoreCaseOrderByAccountName(key, pageable);
         Page<AccountReponse> accountReponses = systemAccounts.map(this::toAccounts);
         return new  PageResponse<>(accountReponses);
     }
@@ -68,7 +67,7 @@ public class SystemAccountService {
         if (systemAccountRepository.existsByAccountEmailIgnoreCase(register.accountEmail())) {
             throw new EmailAlreadyExistException("Email Exist!");
         }
-        if (register.password().equals(register.password2nd())) {
+        if (!register.password().equals(register.password2nd())) {
             throw new RuntimeException("Password not match!");
         }
         SystemAccount account = new SystemAccount();
@@ -76,6 +75,7 @@ public class SystemAccountService {
         account.setAccountEmail(register.accountEmail());
         account.setAccountRole(2);
         account.setAccountPassword(register.password());
+        systemAccountRepository.save(account);
         return toAccounts(account);
     }
 

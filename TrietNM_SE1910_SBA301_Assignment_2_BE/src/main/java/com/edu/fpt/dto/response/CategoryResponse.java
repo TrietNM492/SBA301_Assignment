@@ -6,7 +6,7 @@ public record CategoryResponse(
         Long id,
         String categoryName,
         String categoryDesciption,
-        Category parentCategoryID,
+        Long parentCategoryID,
         boolean isActive
 
 ) {

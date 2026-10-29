@@ -57,7 +57,7 @@ public class NewsArticle {
     private Boolean newsStatus;
 
     @ManyToOne
-    @JoinColumn(name = "CreateByID")
+    @JoinColumn(name = "CreatedByID")
     private SystemAccount createBy;
 
     @Column(name = "UpdatedByID")

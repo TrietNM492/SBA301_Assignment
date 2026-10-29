@@ -10,7 +10,9 @@ import com.edu.fpt.repository.SystemAccountRepository;
 import com.edu.fpt.util.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ public class NewsArticleService {
     private final NewsRepository newsRepository;
     private final SystemAccountRepository systemAccountRepository;
 
+    @Transactional(readOnly = true)
     public PageResponse<NewsResponse> getAll(String key, Pageable pageable) {
         Page<NewsArticle> newsArticles = newsRepository
                 .getNewsArticlesByNewsTitleContainingIgnoreCase(key, pageable);
@@ -32,7 +35,7 @@ public class NewsArticleService {
     @Transactional
     public NewsResponse createNews(NewsRequest request, Long userId) {
         NewsArticle newsArticle = generateNews(request, userId);
-        return toResponse(newsArticle);
+        return toResponse(newsRepository.save(newsArticle));
     }
 
     @Transactional
@@ -61,7 +64,7 @@ public class NewsArticleService {
         return String.format("Deleted News with id: %d and userId: %d", newsId, userId);
     }
 
-
+    @Transactional(readOnly = true)
     public PageResponse<NewsResponse> viewHistory(Long userId, Pageable pageable) {
         Page<NewsArticle> newsArticles = newsRepository.getNewsArticlesByUserId(userId, pageable);
         Page<NewsResponse> newsResponses = newsArticles.map(this::toResponse);
@@ -95,7 +98,7 @@ public class NewsArticleService {
                 newsArticle.getCreatedDate(),
                 newsArticle.getNewsContent(),
                 newsArticle.getNewsSource(),
-                newsArticle.getCategoryID(),
+                newsArticle.getCategoryID().getId(),
                 newsArticle.getNewsStatus(),
                 newsArticle.getUpdatedByID(),
                 newsArticle.getModifiedDate()

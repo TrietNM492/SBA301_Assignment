@@ -19,7 +19,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public PageResponse<CategoryResponse> findAll(String key, Pageable pageable) {
-        Page<Category> categories = categoryRepository.findCategoriesByCategoryNameIgnoreCase(key, pageable);
+        Page<Category> categories = categoryRepository.findByCategoryNameContainingIgnoreCase(key, pageable);
         Page<CategoryResponse> categoryResponses = categories.map(this::toResponse);
         return new PageResponse<>(categoryResponses);
     }
@@ -64,6 +64,6 @@ public class CategoryService {
     }
 
     private CategoryResponse toResponse(Category category) {
-        return new CategoryResponse(category.getId(), category.getCategoryName(), category.getCategoryDesciption(), category.getParentCategoryID(), category.getIsActive());
+        return new CategoryResponse(category.getId(), category.getCategoryName(), category.getCategoryDesciption(), category.getParentCategoryID().getId(), category.getIsActive());
     }
 }

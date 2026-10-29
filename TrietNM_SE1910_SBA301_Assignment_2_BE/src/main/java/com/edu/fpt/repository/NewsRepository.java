@@ -14,10 +14,10 @@ public interface NewsRepository extends JpaRepository<NewsArticle, Long> {
 
     Page<NewsArticle> getNewsArticlesByNewsTitleContainingIgnoreCase(String newsTitle, Pageable pageable);
 
-    @Query("select na from NewsArticle na left join fetch na.createBy sa where na.newsArticleID = :newId and sa.id = :userId")
+    @Query("select na from NewsArticle na left join fetch na.createBy sa where na.newsArticleID = :newsId and sa.id = :userId")
     NewsArticle findNewsArticleByNewsArticleIDAndUserId(@Param("newsId") Long newsId, @Param("userId") Long userId);
 
 
-    @Query("select na from NewsArticle na where na.createBy.id = :userId order by na.createdDate desc")
+    @Query("select na from NewsArticle na where na.createBy.id = :userId")
     Page<NewsArticle> getNewsArticlesByUserId(@Param("userId") Long userId, Pageable pageable);
 }
