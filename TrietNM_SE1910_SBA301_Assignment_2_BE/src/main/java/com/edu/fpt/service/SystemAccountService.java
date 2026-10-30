@@ -4,10 +4,12 @@ import com.edu.fpt.domain.entity.SystemAccount;
 import com.edu.fpt.dto.request.AccountRegister;
 import com.edu.fpt.dto.request.AccountRequest;
 import com.edu.fpt.dto.request.ChangePasswordRequest;
+import com.edu.fpt.dto.request.LoginRequest;
 import com.edu.fpt.dto.request.ProfileRequest;
 import com.edu.fpt.dto.response.AccountReponse;
 import com.edu.fpt.dto.response.ProfileResponse;
 import com.edu.fpt.exception.EmailAlreadyExistException;
+import com.edu.fpt.exception.InvalidCredentialsException;
 import com.edu.fpt.exception.ResourceNotFoundException;
 import com.edu.fpt.repository.SystemAccountRepository;
 import com.edu.fpt.util.PageResponse;
@@ -24,6 +26,12 @@ import java.util.Random;
 public class SystemAccountService {
     private final SystemAccountRepository systemAccountRepository;
 
+    public AccountReponse login(LoginRequest request) {
+        SystemAccount account = systemAccountRepository.findByAccountEmailIgnoreCase(request.username().trim())
+                .filter(found -> checkPass(found.getAccountPassword(), request.password()))
+                .orElseThrow(InvalidCredentialsException::new);
+        return toAccounts(account);
+    }
 
     public ProfileResponse viewProfile(Long userId) {
         SystemAccount userFounded = systemAccountRepository.findById(userId)
@@ -101,7 +109,7 @@ public class SystemAccountService {
     }
 
     private boolean checkPass(String currentPass, String currentPassInput) {
-        return currentPass.equals(currentPassInput);
+        return currentPass != null && currentPass.equals(currentPassInput);
     }
 
     private ProfileResponse toResponse(SystemAccount systemAccount) {

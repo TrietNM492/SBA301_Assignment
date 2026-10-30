@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface SystemAccountRepository extends JpaRepository<SystemAccount, Long> {
 
@@ -19,5 +21,7 @@ public interface SystemAccountRepository extends JpaRepository<SystemAccount, Lo
     Page<SystemAccount> findByAccountEmailContainingIgnoreCaseOrderByAccountName(String key, Pageable pageable);
 
     boolean existsByAccountEmailIgnoreCase(String accountEmail);
+
+    Optional<SystemAccount> findByAccountEmailIgnoreCase(String accountEmail);
 
 }

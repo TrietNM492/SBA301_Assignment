@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +56,10 @@ public class AdminController {
     }
 
     @GetMapping("/accounts/{userId}/profile")
-    public ResponseEntity<ApiResponse<ProfileResponse>> viewProfile(@PathVariable Long userId) {
+    public ResponseEntity<ApiResponse<ProfileResponse>> viewProfile(
+            @PathVariable Long userId,
+            Authentication authentication) {
+        ensureCanManageAccount(userId, authentication);
         ProfileResponse profile = systemAccountService.viewProfile(userId);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Profile retrieved successfully", profile));
     }
@@ -62,7 +67,9 @@ public class AdminController {
     @PutMapping("/accounts/{userId}/name")
     public ResponseEntity<ApiResponse<ProfileResponse>> changeUserName(
             @PathVariable Long userId,
+            Authentication authentication,
             @Valid @RequestBody ProfileRequest request) {
+        ensureCanManageAccount(userId, authentication);
         ProfileResponse profile = systemAccountService.changeUserName(request, userId);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Account name updated successfully", profile));
     }
@@ -70,8 +77,20 @@ public class AdminController {
     @PatchMapping("/accounts/{userId}/password")
     public ResponseEntity<ApiResponse<ProfileResponse>> changeUserPassword(
             @PathVariable Long userId,
+            Authentication authentication,
             @Valid @RequestBody ChangePasswordRequest request) {
+        ensureCanManageAccount(userId, authentication);
         ProfileResponse profile = systemAccountService.changeUserPassword(request, userId);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Password changed successfully", profile));
+    }
+
+    private void ensureCanManageAccount(Long userId, Authentication authentication) {
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+        boolean isOwnAccount = authentication.getPrincipal() instanceof Long accountId
+                && accountId.equals(userId);
+        if (!isAdmin && !isOwnAccount) {
+            throw new AccessDeniedException("You can only manage your own account.");
+        }
     }
 }
