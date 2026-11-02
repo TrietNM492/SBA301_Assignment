@@ -56,12 +56,11 @@ public class NewsArticleService {
     @Transactional
     public String deleteNewsByOwn(Long newsId, Long userId) {
         NewsArticle articleFounded = newsRepository.findNewsArticleByNewsArticleIDAndUserId(newsId, userId);
-        if (articleFounded != null) {
-            newsRepository.delete(articleFounded);
-        } else {
-            throw new RuntimeException("Can't delete");
+        if (articleFounded == null) {
+            throw new ResourceNotFoundException("News Not Found!");
         }
-        return String.format("Deleted News with id: %d and userId: %d", newsId, userId);
+        newsRepository.delete(articleFounded);
+        return String.format("Deleted News with id: %d", newsId);
     }
 
     @Transactional(readOnly = true)

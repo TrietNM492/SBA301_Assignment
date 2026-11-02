@@ -30,6 +30,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/login", "/api/v1/auth/logout", "/api/v1/admin/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/news").permitAll()
                         .requestMatchers(
+                                "/api/v1/admin/accounts/me/profile",
+                                "/api/v1/admin/accounts/me/name",
+                                "/api/v1/admin/accounts/me/password"
+                        ).authenticated()
+                        .requestMatchers(
                                 "/api/v1/admin/accounts/*/profile",
                                 "/api/v1/admin/accounts/*/name",
                                 "/api/v1/admin/accounts/*/password"

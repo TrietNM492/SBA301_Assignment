@@ -3,6 +3,7 @@ package com.edu.fpt.exception;
 import com.edu.fpt.util.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -21,8 +22,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    @ExceptionHandler(value = {InvalidFieldInputException.class})
-    public ResponseEntity<ApiResponse<Object>> handlebarValidationException(InvalidFieldInputException e) {
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
+    public ResponseEntity<ApiResponse<Object>> handleValidationException(MethodArgumentNotValidException e) {
         int status = HttpStatus.BAD_REQUEST.value();
         Map<String, String> details = new LinkedHashMap<String, String>();
         for (var error : e.getFieldErrors()) {

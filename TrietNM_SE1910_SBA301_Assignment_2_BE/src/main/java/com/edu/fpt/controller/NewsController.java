@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +40,8 @@ public class NewsController {
     @PostMapping
     public ResponseEntity<ApiResponse<NewsResponse>> createNews(
             @Valid @RequestBody NewsRequest request,
-            @RequestParam Long userId) {
-        NewsResponse news = newsArticleService.createNews(request, userId);
+            Authentication authentication) {
+        NewsResponse news = newsArticleService.createNews(request, currentUserId(authentication));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ApiResponse<>(HttpStatus.CREATED.value(), "News created successfully", news));
     }
@@ -48,24 +50,31 @@ public class NewsController {
     public ResponseEntity<ApiResponse<NewsResponse>> updateNews(
             @PathVariable Long newsId,
             @Valid @RequestBody NewsRequest request,
-            @RequestParam Long userUpdateId) {
-        NewsResponse news = newsArticleService.updateNews(request, userUpdateId, newsId);
+            Authentication authentication) {
+        NewsResponse news = newsArticleService.updateNews(request, currentUserId(authentication), newsId);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "News updated successfully", news));
     }
 
     @DeleteMapping("/{newsId}")
     public ResponseEntity<ApiResponse<String>> deleteNews(
             @PathVariable Long newsId,
-            @RequestParam Long userId) {
-        String message = newsArticleService.deleteNewsByOwn(newsId, userId);
+            Authentication authentication) {
+        String message = newsArticleService.deleteNewsByOwn(newsId, currentUserId(authentication));
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), message, message));
     }
 
-    @GetMapping("/history/{userId}")
+    @GetMapping("/history")
     public ResponseEntity<ApiResponse<PageResponse<NewsResponse>>> getNewsHistory(
-            @PathVariable Long userId,
+            Authentication authentication,
             Pageable pageable) {
-        PageResponse<NewsResponse> history = newsArticleService.viewHistory(userId, pageable);
+        PageResponse<NewsResponse> history = newsArticleService.viewHistory(currentUserId(authentication), pageable);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "News history retrieved successfully", history));
+    }
+
+    private Long currentUserId(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof Long userId)) {
+            throw new AccessDeniedException("The current session does not identify a user.");
+        }
+        return userId;
     }
 }

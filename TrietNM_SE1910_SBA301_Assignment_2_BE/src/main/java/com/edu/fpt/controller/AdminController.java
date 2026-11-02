@@ -55,6 +55,28 @@ public class AdminController {
                 .body(new ApiResponse<>(HttpStatus.CREATED.value(), "Account registered successfully", account));
     }
 
+    @GetMapping("/accounts/me/profile")
+    public ResponseEntity<ApiResponse<ProfileResponse>> viewCurrentProfile(Authentication authentication) {
+        ProfileResponse profile = systemAccountService.viewProfile(currentUserId(authentication));
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Profile retrieved successfully", profile));
+    }
+
+    @PutMapping("/accounts/me/name")
+    public ResponseEntity<ApiResponse<ProfileResponse>> changeCurrentUserName(
+            Authentication authentication,
+            @Valid @RequestBody ProfileRequest request) {
+        ProfileResponse profile = systemAccountService.changeUserName(request, currentUserId(authentication));
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Account name updated successfully", profile));
+    }
+
+    @PatchMapping("/accounts/me/password")
+    public ResponseEntity<ApiResponse<ProfileResponse>> changeCurrentUserPassword(
+            Authentication authentication,
+            @Valid @RequestBody ChangePasswordRequest request) {
+        ProfileResponse profile = systemAccountService.changeUserPassword(request, currentUserId(authentication));
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Password changed successfully", profile));
+    }
+
     @GetMapping("/accounts/{userId}/profile")
     public ResponseEntity<ApiResponse<ProfileResponse>> viewProfile(
             @PathVariable Long userId,
@@ -82,6 +104,13 @@ public class AdminController {
         ensureCanManageAccount(userId, authentication);
         ProfileResponse profile = systemAccountService.changeUserPassword(request, userId);
         return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Password changed successfully", profile));
+    }
+
+    private Long currentUserId(Authentication authentication) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof Long accountId)) {
+            throw new AccessDeniedException("The current session does not identify a user.");
+        }
+        return accountId;
     }
 
     private void ensureCanManageAccount(Long userId, Authentication authentication) {

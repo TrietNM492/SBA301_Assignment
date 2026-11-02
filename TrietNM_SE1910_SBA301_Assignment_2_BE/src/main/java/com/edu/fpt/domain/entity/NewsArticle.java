@@ -20,7 +20,6 @@ import java.time.Instant;
 public class NewsArticle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Size(max = 20)
     @Column(name = "NewsArticleID", nullable = false, length = 20)
     private Long newsArticleID;
 
