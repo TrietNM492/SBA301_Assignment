@@ -16,7 +16,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     let active = true
-    accountService.getProfile(user.id)
+    accountService.getMyProfile()
       .then((result) => {
         if (!active) return
         setProfile(result)
@@ -37,7 +37,7 @@ export default function ProfilePage() {
     setError('')
     setNotice('')
     try {
-      const updated = await accountService.updateName(user.id, name.trim())
+      const updated = await accountService.updateMyName(name.trim())
       setProfile(updated)
       onSignIn({ ...user, name: updated?.accountName || name.trim() })
       setNotice('Your profile name was updated.')
@@ -54,7 +54,7 @@ export default function ProfilePage() {
     setError('')
     setNotice('')
     try {
-      await accountService.changePassword(user.id, password)
+      await accountService.changeMyPassword(password)
       setPassword({ oldPass: '', newPass: '' })
       setNotice('Your password was updated.')
     } catch (requestError) {

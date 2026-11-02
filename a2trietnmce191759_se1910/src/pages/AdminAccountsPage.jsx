@@ -46,7 +46,7 @@ export default function AdminAccountsPage() {
           accountRole: Number(form.accountRole),
         })
       } else {
-        await accountService.updateName(modal.account.id, form.accountName.trim())
+        await accountService.updateAccountName(modal.account.id, form.accountName.trim())
       }
       setModal(null)
       setRefresh((value) => value + 1)

@@ -9,25 +9,23 @@ export const newsService = {
     return getPage(getApiData(response))
   },
 
-  async create(payload, userId) {
-    const response = await api.post('/news', payload, { params: { userId } })
+  async create(payload) {
+    const response = await api.post('/news', payload)
     return getApiData(response)
   },
 
-  async update(id, payload, userUpdateId) {
-    const response = await api.put(`/news/${id}`, payload, {
-      params: { userUpdateId },
-    })
+  async update(id, payload) {
+    const response = await api.put(`/news/${id}`, payload)
     return getApiData(response)
   },
 
-  async remove(id, userId) {
-    const response = await api.delete(`/news/${id}`, { params: { userId } })
+  async remove(id) {
+    const response = await api.delete(`/news/${id}`)
     return getApiData(response)
   },
 
-  async history(userId, { page = 0, size = 10 } = {}) {
-    const response = await api.get(`/news/history/${userId}`, {
+  async history({ page = 0, size = 10 } = {}) {
+    const response = await api.get('/news/history', {
       params: { page, size },
     })
     return getPage(getApiData(response))

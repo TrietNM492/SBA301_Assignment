@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useOutletContext } from 'react-router'
 import DataTable from '../components/DataTable.jsx'
 import Modal from '../components/Modal.jsx'
 import { PageHeader, Pagination, SearchBar, StatusPill } from '../components/ManagementPage.jsx'
@@ -17,7 +16,6 @@ const blankForm = {
 }
 
 export default function StaffNewsPage({ history = false }) {
-  const { user } = useOutletContext()
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(0)
   const [refresh, setRefresh] = useState(0)
@@ -30,9 +28,9 @@ export default function StaffNewsPage({ history = false }) {
 
   const fetchPage = useCallback(
     () => history
-      ? newsService.history(user.id, { page, size: 10 })
+      ? newsService.history({ page, size: 10 })
       : newsService.list({ key: search, page, size: 10 }),
-    [history, user.id, search, page],
+    [history, search, page],
   )
   const { items, pagination, loading, error } = usePagedData(fetchPage, search, page, refresh)
 
@@ -79,9 +77,9 @@ export default function StaffNewsPage({ history = false }) {
     }
     try {
       if (modal.mode === 'create') {
-        await newsService.create(payload, user.id)
+        await newsService.create(payload)
       } else {
-        await newsService.update(modal.article.newsArticleID, payload, user.id)
+        await newsService.update(modal.article.newsArticleID, payload)
       }
       setModal(null)
       setRefresh((value) => value + 1)
@@ -96,7 +94,7 @@ export default function StaffNewsPage({ history = false }) {
     setBusy(true)
     setFormError('')
     try {
-      await newsService.remove(modal.article.newsArticleID, user.id)
+      await newsService.remove(modal.article.newsArticleID)
       setModal(null)
       setRefresh((value) => value + 1)
     } catch (requestError) {
@@ -185,20 +183,20 @@ export default function StaffNewsPage({ history = false }) {
               {!categories.length && <div className="notice notice-warning">An active category is required before an article can be saved.</div>}
               <label className="form-field">
                 <span>Title</span>
-                <input value={form.newsTitle} onChange={(event) => setForm({ ...form, newsTitle: event.target.value })} required maxLength={200} />
+                <input value={form.newsTitle} onChange={(event) => setForm({ ...form, newsTitle: event.target.value })} required maxLength={400} />
               </label>
               <label className="form-field">
                 <span>Headline</span>
-                <input value={form.headline} onChange={(event) => setForm({ ...form, headline: event.target.value })} />
+                <input value={form.headline} onChange={(event) => setForm({ ...form, headline: event.target.value })} required maxLength={150} />
               </label>
               <label className="form-field">
                 <span>Content</span>
-                <textarea rows="7" value={form.newsContent} onChange={(event) => setForm({ ...form, newsContent: event.target.value })} required />
+                <textarea rows="7" value={form.newsContent} onChange={(event) => setForm({ ...form, newsContent: event.target.value })} required maxLength={4000} />
               </label>
               <div className="form-grid">
                 <label className="form-field">
                   <span>Source</span>
-                  <input value={form.newsSource} onChange={(event) => setForm({ ...form, newsSource: event.target.value })} />
+                  <input value={form.newsSource} onChange={(event) => setForm({ ...form, newsSource: event.target.value })} maxLength={400} />
                 </label>
                 <label className="form-field">
                   <span>Category</span>
