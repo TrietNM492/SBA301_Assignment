@@ -2,7 +2,10 @@ import { Row, Col, Button } from 'react-bootstrap'
 import { useAuth } from '../context/AuthContext'
 import { useData } from '../context/DataContext'
 import { RoleBadge } from '../components/common/ui'
-
+/**
+ * TrietNM
+ * @returns 
+ */
 export default function SettingsPage() {
     const { currentUser } = useAuth()
     const { resetData } = useData()

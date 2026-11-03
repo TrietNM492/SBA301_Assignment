@@ -3,7 +3,10 @@ import { Table, Button, Modal, Form, Alert, InputGroup } from 'react-bootstrap'
 import ConfirmModal from './ConfirmModal'
 import { Icon } from './ui'
 
-
+/**
+ * TrietNM
+ * @returns 
+ */
 export default function EntityManager({ title, items, setItems, columns, fields, emptyForm, searchText, validate, deleteMessage }) {
     const [keyword, setKeyword] = useState('')
     const [modal, setModal] = useState({ show: false, mode: 'create' })
@@ -59,22 +62,22 @@ export default function EntityManager({ title, items, setItems, columns, fields,
                 </div>
                 <Table responsive hover className="mb-0 align-middle">
                     <thead>
-                    <tr>{columns.map((c) => <th key={c.label}>{c.label}</th>)}<th className="text-end" style={{ width: 120 }}>Actions</th></tr>
+                        <tr>{columns.map((c) => <th key={c.label}>{c.label}</th>)}<th className="text-end" style={{ width: 120 }}>Actions</th></tr>
                     </thead>
                     <tbody>
-                    {shown.length === 0 ? (
-                        <tr><td colSpan={columns.length + 1} className="text-center text-muted py-5">
-                            {items.length === 0 ? 'Chưa có dữ liệu.' : 'Không tìm thấy kết quả.'}
-                        </td></tr>
-                    ) : shown.map((item) => (
-                        <tr key={item.id}>
-                            {columns.map((c) => <td key={c.label}>{c.render ? c.render(item) : item[c.key]}</td>)}
-                            <td className="text-end text-nowrap">
-                                <Button size="sm" variant="light" className="me-1" title="Edit" onClick={() => openEdit(item)}><Icon name="edit" size={15} /></Button>
-                                <Button size="sm" variant="light" className="text-danger" title="Delete" onClick={() => setToDelete(item)}><Icon name="trash" size={15} /></Button>
-                            </td>
-                        </tr>
-                    ))}
+                        {shown.length === 0 ? (
+                            <tr><td colSpan={columns.length + 1} className="text-center text-muted py-5">
+                                {items.length === 0 ? 'Chưa có dữ liệu.' : 'Không tìm thấy kết quả.'}
+                            </td></tr>
+                        ) : shown.map((item) => (
+                            <tr key={item.id}>
+                                {columns.map((c) => <td key={c.label}>{c.render ? c.render(item) : item[c.key]}</td>)}
+                                <td className="text-end text-nowrap">
+                                    <Button size="sm" variant="light" className="me-1" title="Edit" onClick={() => openEdit(item)}><Icon name="edit" size={15} /></Button>
+                                    <Button size="sm" variant="light" className="text-danger" title="Delete" onClick={() => setToDelete(item)}><Icon name="trash" size={15} /></Button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </Table>
             </div>

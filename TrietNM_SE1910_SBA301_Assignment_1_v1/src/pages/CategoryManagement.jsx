@@ -1,7 +1,10 @@
 import EntityManager from '../components/common/EntityManager'
 import { useData } from '../context/DataContext'
 import { StatusBadge } from '../components/common/ui'
-
+/**
+ * TrietNM
+ * @returns 
+ */
 export default function CategoryManagement() {
     const { categories, setCategories, news } = useData()
 

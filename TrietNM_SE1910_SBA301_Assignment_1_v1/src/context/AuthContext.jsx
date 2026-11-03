@@ -1,6 +1,9 @@
 import { createContext, useContext, useState } from 'react'
 import { useData } from './DataContext'
-
+/**
+ * TrietNM
+ * @returns 
+ */
 const AuthContext = createContext(null)
 export const useAuth = () => useContext(AuthContext)
 

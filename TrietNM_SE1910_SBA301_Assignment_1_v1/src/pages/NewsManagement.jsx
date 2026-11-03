@@ -2,7 +2,10 @@ import EntityManager from '../components//common/EntityManager'
 import { useData } from '../context/DataContext'
 import { useAuth } from '../context/AuthContext'
 import { StatusBadge } from '../components/common/ui.jsx'
-
+/**
+ * TrietNM
+ * @returns 
+ */
 export default function NewsManagement() {
     const { news, setNews, categories } = useData()
     const { currentUser } = useAuth()

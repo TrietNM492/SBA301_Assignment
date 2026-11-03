@@ -1,6 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-
+/**
+ * TrietNM
+ * @returns 
+ */
 export default function LoginLayout() {
     const { currentUser } = useAuth()
     if (currentUser) return <Navigate to="/" replace />

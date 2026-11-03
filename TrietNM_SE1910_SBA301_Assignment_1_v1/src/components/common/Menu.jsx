@@ -2,7 +2,10 @@ import { Nav } from 'react-bootstrap'
 import { NavLink } from 'react-router-dom'
 import { Icon } from './ui'
 
-
+/**
+ * TrietNM
+ * @returns 
+ */
 export const menuItems = [
     { to: '/', label: 'Dashboard', icon: 'dashboard', end: true },
     { to: '/categories', label: 'Category', icon: 'tag' },

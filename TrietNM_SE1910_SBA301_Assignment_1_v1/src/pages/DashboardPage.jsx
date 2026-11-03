@@ -1,7 +1,10 @@
 import { Row, Col, ProgressBar, Table } from 'react-bootstrap'
 import { useData } from '../context/DataContext'
 import { Icon, StatusBadge } from '../components/common/ui'
-
+/**
+ * TrietNM
+ * @returns 
+ */
 export default function DashboardPage() {
     const { categories, news, users } = useData()
     const stats = [
@@ -34,10 +37,10 @@ export default function DashboardPage() {
                 <Table responsive hover className="mb-0 align-middle">
                     <thead><tr><th>Title</th><th>Category</th><th>Created by</th><th>Status</th></tr></thead>
                     <tbody>
-                    {latest.length === 0 ? <tr><td colSpan={4} className="text-center text-muted py-4">Chưa có dữ liệu.</td></tr>
-                        : latest.map((n) => (
-                            <tr key={n.id}><td className="fw-medium">{n.title}</td><td>{catName(n.categoryId)}</td><td>{n.createdBy}</td><td><StatusBadge status={n.status} /></td></tr>
-                        ))}
+                        {latest.length === 0 ? <tr><td colSpan={4} className="text-center text-muted py-4">Chưa có dữ liệu.</td></tr>
+                            : latest.map((n) => (
+                                <tr key={n.id}><td className="fw-medium">{n.title}</td><td>{catName(n.categoryId)}</td><td>{n.createdBy}</td><td><StatusBadge status={n.status} /></td></tr>
+                            ))}
                     </tbody>
                 </Table>
             </div>

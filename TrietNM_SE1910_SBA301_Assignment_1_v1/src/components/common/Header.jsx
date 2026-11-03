@@ -1,7 +1,10 @@
 import { Button } from 'react-bootstrap'
 import { Icon } from './ui'
-import {useAuth} from "../../context/AuthContext.jsx";
-
+import { useAuth } from "../../context/AuthContext.jsx";
+/**
+ * TrietNM
+ * @returns 
+ */
 export default function Header() {
     const { currentUser, logout } = useAuth()
     return (

@@ -1,3 +1,7 @@
+/**
+ * TrietNM
+ * @returns 
+ */
 // status: 1 = active, 0 = inactive | role: 1 = Admin, 2 = Staff
 export const initCategories = [
     { id: 1, name: 'Technology', status: 1 },

@@ -1,6 +1,9 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { initCategories, initNews, initUsers } from '../data/mockData'
-
+/**
+ * TrietNM
+ * @returns 
+ */
 const DataContext = createContext(null)
 export const useData = () => useContext(DataContext)
 

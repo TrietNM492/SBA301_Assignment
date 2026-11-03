@@ -1,5 +1,8 @@
 import { Modal, Button } from 'react-bootstrap'
-
+/**
+ * TrietNM
+ * @returns 
+ */
 export default function ConfirmModal({ show, message, onConfirm, onCancel }) {
     return (
         <Modal show={show} onHide={onCancel} centered>

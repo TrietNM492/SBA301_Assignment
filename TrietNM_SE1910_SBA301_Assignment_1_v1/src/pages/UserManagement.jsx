@@ -1,7 +1,10 @@
 import EntityManager from '../components/common/EntityManager'
 import { useData } from '../context/DataContext'
 import { RoleBadge } from '../components/common/ui'
-
+/**
+ * TrietNM
+ * @returns 
+ */
 export default function UserManagement() {
     const { users, setUsers } = useData()
     return (

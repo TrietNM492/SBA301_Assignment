@@ -2,7 +2,10 @@ import { useState } from 'react'
 import { Card, Form, Button, Alert } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-
+/**
+ * TrietNM
+ * @returns 
+ */
 export default function LoginPage() {
     const [form, setForm] = useState({ username: '', password: '' })
     const [errors, setErrors] = useState({})
@@ -38,13 +41,13 @@ export default function LoginPage() {
                     <Form.Group className="mb-3">
                         <Form.Label className="fw-medium">Username</Form.Label>
                         <Form.Control name="username" size="lg" autoFocus autoComplete="username"
-                                      value={form.username} onChange={handleChange} isInvalid={!!errors.username} />
+                            value={form.username} onChange={handleChange} isInvalid={!!errors.username} />
                         <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="mb-4">
                         <Form.Label className="fw-medium">Password</Form.Label>
                         <Form.Control name="password" type="password" size="lg" autoComplete="current-password"
-                                      value={form.password} onChange={handleChange} isInvalid={!!errors.password} />
+                            value={form.password} onChange={handleChange} isInvalid={!!errors.password} />
                         <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
                     </Form.Group>
                     <Button type="submit" size="lg" className="w-100">Đăng nhập</Button>
