@@ -44,10 +44,10 @@ public class Staff {
     private String password;
 
     @Column(name = "Role", columnDefinition = "tinyint not null")
-    private Short role;
+    private Short role;      // 1 by default: Staff manager
 
     @Column(name = "StaffStatus", columnDefinition = "tinyint")
-    private Short staffStatus;
+    private Short staffStatus;       // 1 is active, 0 is deactivate
 
     @Column(name = "HireDate")
     private LocalDate hireDate;

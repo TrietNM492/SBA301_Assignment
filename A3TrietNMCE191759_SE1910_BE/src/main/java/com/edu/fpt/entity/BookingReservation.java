@@ -30,7 +30,7 @@ public class BookingReservation {
     private Customer customerID;
 
     @Column(name = "BookingStatus", columnDefinition = "tinyint")
-    private Short bookingStatus;
+    private Short bookingStatus; // 0 is pending, 1 complete
 
 
 }

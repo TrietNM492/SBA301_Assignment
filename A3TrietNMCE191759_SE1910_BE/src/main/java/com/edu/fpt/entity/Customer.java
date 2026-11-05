@@ -41,7 +41,7 @@ public class Customer {
     private LocalDate customerBirthday;
 
     @Column(name = "CustomerStatus", columnDefinition = "tinyint")
-    private Short customerStatus;
+    private Short customerStatus;  // 1 active, 0 deactivate
 
     @Size(max = 255)
     @NotNull
