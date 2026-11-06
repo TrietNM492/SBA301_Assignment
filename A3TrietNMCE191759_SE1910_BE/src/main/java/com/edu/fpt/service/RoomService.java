@@ -15,8 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-
 @Service
 @RequiredArgsConstructor
 public class RoomService {
@@ -26,7 +24,8 @@ public class RoomService {
     private final BookingDetailRepository bookingDetailRepository;
 
     public PageResponse<RoomResponse> getAllRooms(String roomNumber, Pageable pageable) {
-        Page<RoomInformation> roomInformations = roomInformationRepository.findByRoomNumberContainingIgnoreCase(roomNumber, pageable);
+        Page<RoomInformation> roomInformations = roomInformationRepository.findByRoomNumberContainingIgnoreCase(
+                roomNumber == null ? "" : roomNumber, pageable);
         Page<RoomResponse> res = roomInformations.map(this::toRoomResponse);
         return new PageResponse<>(res);
     }
@@ -47,7 +46,7 @@ public class RoomService {
 
     public RoomResponse getRoomById(Integer id) {
         RoomInformation room = roomInformationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Room not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + id));
         return toRoomResponse(room);
     }
 
@@ -57,7 +56,7 @@ public class RoomService {
                 .orElseThrow(() -> new ResourceNotFoundException("Room Type Not Found!"));
         RoomInformation roomInformation = new RoomInformation();
         roomInformation.setRoomNumber(request.getRoomNumber());
-        roomInformation.setRoomDetailDescription(roomInformation.getRoomDetailDescription());
+        roomInformation.setRoomDetailDescription(request.getRoomDetailDescription());
         roomInformation.setRoomMaxCapacity(request.getRoomMaxCapacity());
         roomInformation.setRoomTypeID(roomType);
         roomInformation.setRoomStatus(request.getRoomStatus() != null ? request.getRoomStatus() : 1);
@@ -68,16 +67,16 @@ public class RoomService {
     @Transactional
     public RoomResponse updateRoom(Integer id, RoomRequest request) {
         RoomInformation room = roomInformationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Room not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
 
         RoomType roomType = roomTypeRepository.findById(request.getRoomTypeId())
-                .orElseThrow(() -> new RuntimeException("Room Type not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Room Type not found"));
 
         room.setRoomNumber(request.getRoomNumber());
         room.setRoomDetailDescription(request.getRoomDetailDescription());
         room.setRoomMaxCapacity(request.getRoomMaxCapacity());
         room.setRoomTypeID(roomType);
-        room.setRoomStatus(request.getRoomStatus());
+        room.setRoomStatus(request.getRoomStatus() != null ? request.getRoomStatus() : room.getRoomStatus());
         room.setRoomPricePerDay(request.getRoomPricePerDay());
 
         return toRoomResponse(roomInformationRepository.save(room));
@@ -88,7 +87,7 @@ public class RoomService {
         RoomInformation room = roomInformationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
 
-        boolean isRoomBooked = bookingDetailRepository.existsByRoomIDBookingNow(id, (short) 0, LocalDate.now());
+        boolean isRoomBooked = bookingDetailRepository.existsByRoomID_Id(id);
 
         if (isRoomBooked) {
             room.setRoomStatus((short) 0);

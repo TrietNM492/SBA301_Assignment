@@ -28,8 +28,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
             "c.customerBirthday as customerBirthday, " +
             "c.customerStatus as customerStatus " +
             "from Customer c " +
-            "where c.customerFullName like concat('%', :keyword, '%') " +
-            "or c.emailAddress like concat('%', :keyword, '%')")
+            "where lower(c.customerFullName) like lower(concat('%', :keyword, '%')) " +
+            "or lower(c.emailAddress) like lower(concat('%', :keyword, '%'))")
     Page<CustomerProjection> findByCustomerFullNameAndEmailAddressContainingIgnoreCase(
             @Param("keyword") String keyword,
             Pageable pageable

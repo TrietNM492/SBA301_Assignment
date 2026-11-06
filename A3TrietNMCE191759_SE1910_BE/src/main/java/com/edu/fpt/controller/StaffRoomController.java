@@ -23,38 +23,42 @@ public class StaffRoomController {
 
 
     @GetMapping
-    public ResponseEntity<ApiResponse<PageResponse<RoomResponse>>> getAllRooms(@RequestBody(required = false) String roomNumber, Pageable pageable) {
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "GET ALL ROOM" , roomService.getAllRooms(roomNumber, pageable)));
+    public ResponseEntity<ApiResponse<PageResponse<RoomResponse>>> getAllRooms(
+            @RequestParam(required = false) String roomNumber, Pageable pageable) {
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Rooms retrieved successfully",
+                roomService.getAllRooms(roomNumber, pageable)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<RoomResponse>> getRoomById(@PathVariable Integer id) {
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "GET ROOM BY ID", roomService.getRoomById(id)));
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Room retrieved successfully",
+                roomService.getRoomById(id)));
     }
 
     @PostMapping
     public ResponseEntity<ApiResponse<RoomResponse>> createRoom(@Valid @RequestBody RoomRequest request) {
         RoomResponse createdRoom = roomService.createRoom(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(HttpStatus.CREATED.value(), "CREATE NEW ROOM" ,createdRoom));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(HttpStatus.CREATED.value(), "Room created successfully", createdRoom));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<RoomResponse>> updateRoom(
             @PathVariable Integer id,
             @Valid @RequestBody RoomRequest request) {
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "UPDATE ROOM", roomService.updateRoom(id, request)));
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Room updated successfully",
+                roomService.updateRoom(id, request)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteRoom(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<Void>> deleteRoom(@PathVariable Integer id) {
         roomService.deleteRoom(id);
-        return ResponseEntity.ok("Room processed for deletion (Hard delete or Status change)");
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Room deleted successfully", null));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<RoomResponse>> changeRoomStatus(@PathVariable Integer id) {
-        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Change Room Status", roomService.changeRoomStatus(id)));
+        return ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Room status updated successfully",
+                roomService.changeRoomStatus(id)));
     }
-
-
 }

@@ -1,13 +1,13 @@
 package com.edu.fpt.dto.request;
 
-import com.edu.fpt.dto.response.BookingResponse;
-import com.edu.fpt.dto.response.CustomerResponse;
-import com.edu.fpt.dto.response.RoomResponse;
-import com.edu.fpt.entity.BookingDetailId;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,8 +17,9 @@ import java.time.LocalDate;
 public class BookingRequest {
 
     private LocalDate bookingDate = LocalDate.now();
-    private CustomerResponse customerResponse;
-    private BookingDetailRequest bookingDetailResponse;
+    @NotEmpty(message = "At least one room is required")
+    @Valid
+    private List<BookingDetailRequest> bookingDetails = new ArrayList<>();
 
 
     @Getter
@@ -27,8 +28,11 @@ public class BookingRequest {
     @AllArgsConstructor
     @Builder
     public static class BookingDetailRequest {
+        @NotNull(message = "Room ID is required")
         private Integer roomId;
+        @NotNull(message = "Start date is required")
         private LocalDate startDate;
+        @NotNull(message = "End date is required")
         private LocalDate endDate;
     }
 }

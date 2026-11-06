@@ -28,9 +28,9 @@ public class JwtService {
 
     public String generateToken(CustomUserDetails user) {
         Date now = Date.from(Instant.now());
-        Date to = Date.from(now.toInstant().plus(Duration.of(expiration, ChronoUnit.SECONDS)));
+        Date to = Date.from(now.toInstant().plusMillis(expiration));
         return Jwts.builder()
-                .subject(user.user().userType() + ":" + user.getUsername())
+                .subject(user.getUsername())
                 .claim("userId", user.user().id())
                 .claim("userType", user.user().userType())
                 .claim("authorities", user.getAuthorities()

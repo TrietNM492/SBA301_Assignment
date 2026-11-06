@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,7 +18,7 @@ public class BookingResponse {
     private BigDecimal totalPrice;
     private CustomerResponse customerResponse;
     private Short bookingStatus;
-    private BookingDetailResponse bookingDetailResponse;
+    private List<BookingDetailResponse> bookingDetails;
 
 
     @Getter

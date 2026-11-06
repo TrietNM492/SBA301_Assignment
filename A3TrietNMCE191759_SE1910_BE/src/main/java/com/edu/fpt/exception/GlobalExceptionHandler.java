@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -52,5 +53,19 @@ public class GlobalExceptionHandler {
         int status = HttpStatus.UNAUTHORIZED.value();
         ApiResponse<Object> response = new ApiResponse<>(status, e.getMessage(), null, "INVALID_CREDENTIALS");
         return ResponseEntity.status(status).body(response);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Object>> handleIllegalArgumentException(IllegalArgumentException e) {
+        int status = HttpStatus.BAD_REQUEST.value();
+        return ResponseEntity.status(status).body(
+                new ApiResponse<>(status, e.getMessage(), null, "INVALID_REQUEST"));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDataIntegrityViolation(DataIntegrityViolationException e) {
+        int status = HttpStatus.CONFLICT.value();
+        return ResponseEntity.status(status).body(
+                new ApiResponse<>(status, "The operation conflicts with existing data", null, "RESOURCE_CONFLICT"));
     }
 }

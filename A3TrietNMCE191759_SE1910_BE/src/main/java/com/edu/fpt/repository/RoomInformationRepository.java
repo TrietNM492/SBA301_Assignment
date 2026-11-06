@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoomInformationRepository extends JpaRepository<RoomInformation, Integer> {
     Page<RoomInformation> findByRoomNumberContainingIgnoreCase(String roomNumber, Pageable pageable);
+    boolean existsByRoomTypeID_Id(Integer roomTypeId);
 }

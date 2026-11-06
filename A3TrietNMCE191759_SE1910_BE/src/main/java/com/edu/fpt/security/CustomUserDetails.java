@@ -5,7 +5,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
 
 public record CustomUserDetails(
         UserSecurityRes user
@@ -22,7 +21,7 @@ public record CustomUserDetails(
 
     @Override
     public String getUsername() {
-        return user.email();
+        return user.userType() + ":" + user.email();
     }
 
     @Override

@@ -33,13 +33,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (type.equals("CUSTOMER")) {
             Customer customer = customerRepository.findByEmailAddressIgnoreCase(email)
                     .orElseThrow(() -> new UsernameNotFoundException("Customer Not Found!"));
+            if (!Short.valueOf((short) 1).equals(customer.getCustomerStatus())) {
+                throw new UsernameNotFoundException("Customer account is inactive");
+            }
             UserSecurityRes user = new UserSecurityRes(customer.getId(),
                     customer.getEmailAddress(),
                     customer.getPassword(),
                     customer.getCustomerFullName(),
                     type,
-                    List.of(new SimpleGrantedAuthority("ROLE_" + type))
-            );
+                    List.of(new SimpleGrantedAuthority("ROLE_" + type)));
             return new CustomUserDetails(user);
         } else if (type.equals("STAFF")) {
             Staff staff = staffRepository.findByEmailAddressIgnoreCase(email)
@@ -56,12 +58,13 @@ public class CustomUserDetailsService implements UserDetailsService {
                     staff.getPassword(),
                     staff.getStaffFullName(),
                     type,
-                    List.of(new SimpleGrantedAuthority(role))
-            );
+                    List.of(
+                            new SimpleGrantedAuthority("ROLE_STAFF"),
+                            new SimpleGrantedAuthority(role)
+                    ));
             return new CustomUserDetails(user);
         }
         throw new UsernameNotFoundException("Unknown user type: " + type);
     }
-
 
 }
